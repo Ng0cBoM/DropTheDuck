@@ -29,7 +29,7 @@ namespace DVAH
                 request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
             }
             else
-                this.request = UnityWebRequest.Post(endPoin, "");
+                this.request = UnityWebRequest.PostWwwForm(endPoin, "");
 
         }
 
