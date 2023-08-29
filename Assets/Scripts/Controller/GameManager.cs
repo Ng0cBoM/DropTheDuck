@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-/*using DG.Tweening;*/
+using DG.Tweening;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -37,7 +38,7 @@ public class GameManager : MonoBehaviour
 
     public void SpawnRandomBlock()
     {
-        var block = listPrefabs[Random.Range(0, listPrefabs.Count)];
+        var block = listPrefabs[Random.Range(0, 5)];
         gameSpeed = 0.001f;
         SpawnBlock(block, spawnPosition);
         StartCoroutine(MoveDown(currentBlock));
@@ -52,15 +53,10 @@ public class GameManager : MonoBehaviour
     {
         while (IsCanMove(block))
         {
-            BlockMove(block, gameSpeed);
+            block.transform.position -= new Vector3(0, gameSpeed, 0);
             yield return new WaitForSeconds(0.001f);
         }
-        CheckAroundBlock(block);
-    }
-
-    private void BlockMove(Block block, float value)
-    {
-        block.transform.position -= new Vector3(0, value, 0);
+        FixBlockIntoGrid(block);
     }
 
     public bool IsCanMove(Block block)
@@ -81,40 +77,64 @@ public class GameManager : MonoBehaviour
         }
         return count;
     }
+    private void FixBlockIntoGrid(Block block)
+    {
+        int x = Mathf.RoundToInt(block.transform.position.x);
+        int y = Mathf.RoundToInt(block.transform.position.y);
+        block.transform.position = new Vector2(x, y);
+        Grid[x + 2, y] = block;
+        CheckAroundBlock(block);
+    }
 
     public void CheckAroundBlock(Block block)
     {
         int x = (Mathf.RoundToInt(block.transform.position.x)) + 2;
         int y = Mathf.RoundToInt(block.transform.position.y);
         listBlockDestroy.Clear();
-        //AlikeBlock under current block
+        listBlockDestroy.Add(Grid[x, y]);
+        //Case 1: AlikeBlock under current block
         if (y > 0 && Grid[x, y - 1] != null)
             if (Grid[x, y - 1].numberInBlock == block.numberInBlock)
                 listBlockDestroy.Add(Grid[x, y - 1]);
-        //AlikeBlock left current block
+        //Case 2: AlikeBlock left current block
         if (x > 0 && Grid[x - 1, y])
             if (Grid[x - 1, y].numberInBlock == block.numberInBlock)
                 listBlockDestroy.Add(Grid[x - 1, y]);
-        //AlikeBlock right current block
+        //Case 3: AlikeBlock right current block
         if (x < GridSizeX - 1 && Grid[x + 1, y] != null)
             if (Grid[x + 1, y].numberInBlock == block.numberInBlock)
                 listBlockDestroy.Add(Grid[x + 1, y]);
-        if (listBlockDestroy.Count > 0)
+        if (listBlockDestroy.Count > 1)
         {
             MergeBlock(block);
         }
         else
         {
-            FixBlockIntoGrid(x, y, block);
+            CheckSpaceInGrid();
         }
+    }
+
+    private void MergeBlock(Block rootBlock)
+    {
+        foreach (Block block in listBlockDestroy)
+        {
+            int x = (Mathf.RoundToInt(block.transform.position.x)) + 2;
+            int y = Mathf.RoundToInt(block.transform.position.y);
+            Grid[x, y] = null;
+            Vector3 targetPosiotionMerge = new Vector3((int)rootBlock.transform.position.x, (int)rootBlock.transform.position.y, 0);
+            if (block != rootBlock) block.transform.DOMove(targetPosiotionMerge, 0.2f).OnComplete(() =>
+            {
+                Destroy(block.gameObject);
+            });
+        }
+        ReplaceBlock(listBlockDestroy.Count - 1, rootBlock);
     }
 
     private void ReplaceBlock(int amountBlockMerge, Block block)
     {
-        //int numberInBlockNext = currentBlock.numberInBlock * (int)Math.Pow(2, amountBlockMerge);
+        int numberInBlockNext = currentBlock.numberInBlock * (int)Math.Pow(2, amountBlockMerge);
         int x = (Mathf.RoundToInt(block.transform.position.x)) + 2;
         int y = Mathf.RoundToInt(block.transform.position.y);
-        int numberInBlockNext = block.numberInBlock;
         for (int i = 0; i < listPrefabs.Count; i++)
         {
             if (listPrefabs[i].numberInBlock == numberInBlockNext)
@@ -130,8 +150,8 @@ public class GameManager : MonoBehaviour
 
     private void CheckSpaceInGrid()
     {
-        bool breakLoop = false;
-        int countNullInGrid = 0;
+        int nullInGrid = 0;
+        int breakLoopCondition = 0;
         for (int i = 0; i < GridSizeX; i++)
         {
             for (int j = 1; j < GridSizeY; j++)
@@ -140,32 +160,13 @@ public class GameManager : MonoBehaviour
                 {
                     StartCoroutine(MoveDown(Grid[i, j]));
                     Grid[i, j] = null;
+                    nullInGrid++;
+                    breakLoopCondition++;
                     break;
-                    breakLoop = true;
-                    countNullInGrid++;
                 }
             }
-            if (breakLoop) break;
+            if (breakLoopCondition != 0) break;
         }
-        if (countNullInGrid == 0) SpawnRandomBlock();
-    }
-
-    private void FixBlockIntoGrid(int col, int row, Block block)
-    {
-        block.transform.position = new Vector2(col - 2, row);
-        Grid[col, row] = block;
-        CheckSpaceInGrid();
-    }
-
-    private void MergeBlock(Block rootBlock)
-    {
-        foreach (Block block in listBlockDestroy)
-        {
-            int x = (Mathf.RoundToInt(block.transform.position.x)) + 2;
-            int y = Mathf.RoundToInt(block.transform.position.y);
-            Destroy(block.gameObject);
-            Grid[x, y] = null;
-        }
-        ReplaceBlock(listBlockDestroy.Count, rootBlock);
-    }
+        if (nullInGrid == 0) SpawnRandomBlock();
+    }    
 }
