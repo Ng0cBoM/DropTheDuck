@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1245448201118963275}
   - component: {fileID: 8075950063900270450}
-  - component: {fileID: 5543118016589082828}
   - component: {fileID: 5104728104002644675}
+  - component: {fileID: -8237598570000463580}
   m_Layer: 0
   m_Name: Square_2
   m_TagString: Untagged
@@ -91,19 +91,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5543118016589082828
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1924216206972409318}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08dcaa09b3dbe2a4fb91587d10161ba8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  numberInBlock: 2
 --- !u!222 &5104728104002644675
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -112,3 +99,16 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1924216206972409318}
   m_CullTransparentMesh: 1
+--- !u!114 &-8237598570000463580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1924216206972409318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed24c84dfbb616c45af6e4fbc7da9ab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberInBlock: 2

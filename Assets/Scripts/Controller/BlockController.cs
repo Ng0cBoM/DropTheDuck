@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class BlockController : MonoBehaviour
 {
-    public int numberInBlock;
+    /*public int numberInBlock;
     public int blockDestination;
 
     private void Awake()
@@ -45,7 +45,7 @@ public class BlockController : MonoBehaviour
 
     public bool IsCanMove()
     {
-        if (transform.position.y <= GameManager.Instance.countBlockEachColume[(int)transform.position.x + 2])
+        if (transform.position.y <= GameManager.Instance.countBlockPerColume[(int)transform.position.x + 2])
         {
             return false;
         }
@@ -54,12 +54,12 @@ public class BlockController : MonoBehaviour
 
     private void DropBlockHandle(UpdateGrid signal)
     {
-        if (IsCanMove())
+        if (IsCanMove() || GameManager.Instance.Grid[(int)transform.position.x + 2, (int)transform.position.y - 1] == null)
             StartCoroutine(MoveDown());
     }
 
     private void OnDestroy()
     {
         SignalBus.I.Unregister<UpdateGrid>(DropBlockHandle);
-    }
+    }*/
 }
