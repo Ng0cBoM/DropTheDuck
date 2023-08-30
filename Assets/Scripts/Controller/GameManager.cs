@@ -24,7 +24,9 @@ public class GameManager : MonoBehaviour
 
     private List<Block> listBlockDestroy = new List<Block>();
 
-    public Vector2 spawnPosition = new Vector2(0, 6);
+    public Vector2 spawnPosition = new Vector2(0, 7);
+
+    public bool canDrop = true;
 
     private void Awake()
     {
@@ -38,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     public void SpawnRandomBlock()
     {
+        canDrop = true;
         var block = listPrefabs[Random.Range(0, 5)];
         gameSpeed = 0.001f;
         SpawnBlock(block, spawnPosition);
@@ -77,6 +80,7 @@ public class GameManager : MonoBehaviour
         }
         return count;
     }
+
     private void FixBlockIntoGrid(Block block)
     {
         int x = Mathf.RoundToInt(block.transform.position.x);
@@ -145,7 +149,10 @@ public class GameManager : MonoBehaviour
                 break;
             }
         }
-        CheckSpaceInGrid();
+        if (y > 0 && Grid[x, y - 1] == null)
+            CheckSpaceInGrid();
+        else
+            CheckAroundBlock(Grid[x, y]);
     }
 
     private void CheckSpaceInGrid()
@@ -168,5 +175,5 @@ public class GameManager : MonoBehaviour
             if (breakLoopCondition != 0) break;
         }
         if (nullInGrid == 0) SpawnRandomBlock();
-    }    
+    }
 }

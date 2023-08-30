@@ -5,14 +5,18 @@ public class PlayerInput : MonoBehaviour
 {
     private void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (GameManager.Instance.canDrop)
         {
-            SetPositionBlock();
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            GameManager.Instance.gameSpeed *= 100;
-            GameManager.Instance.spawnPosition = new Vector2(GetColumeMouse(), 6);
+            if (Input.GetMouseButton(0))
+            {
+                SetPositionBlock();
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                GameManager.Instance.canDrop = false;
+                GameManager.Instance.gameSpeed *= 100;
+                GameManager.Instance.spawnPosition = new Vector2(GetColumeMouse(), 7);
+            }
         }
     }
 
