@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
 
     private List<Block> listBlockDestroy = new List<Block>();
 
-    public Vector2 spawnPosition = new Vector2(0, 7);
+    public Vector2 spawnPosition = new Vector2(0, 6);
 
     public bool canDrop = true;
 
