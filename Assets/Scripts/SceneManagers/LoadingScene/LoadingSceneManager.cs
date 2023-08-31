@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class LoadingSceneManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-
     private void Start()
     {
         var userData = DataManager.I.UserData;

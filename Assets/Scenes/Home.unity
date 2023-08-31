@@ -456,6 +456,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbbf7ee664111064d8d9afa5e9bc4b15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  KeepScreenWork: 0
+  KeepOldScreenWork: 0
+  prefabName: 
+  canvasRoot: {fileID: 0}
+  tween: {fileID: 0}
   playButton: {fileID: 786913767}
   shopButton: {fileID: 1963857434}
   inventoryButton: {fileID: 698178194}
@@ -930,7 +935,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5492653930675054819, guid: 9f62b7b7093694f64b9dafe0fb98cbcd, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 489.91
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5492653930675054819, guid: 9f62b7b7093694f64b9dafe0fb98cbcd, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -970,7 +975,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5492653930985943141, guid: 9f62b7b7093694f64b9dafe0fb98cbcd, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 125.705
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5492653930985943141, guid: 9f62b7b7093694f64b9dafe0fb98cbcd, type: 3}
       propertyPath: m_AnchoredPosition.y

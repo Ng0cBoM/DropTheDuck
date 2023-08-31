@@ -24,6 +24,19 @@ namespace Core.Framework
             }
         }
 
+        public void UpdateCoin(int coinAmount)
+        {
+            _userData.Coin += coinAmount;
+            SavePlayerData();
+            SignalBus.I.FireSignal<UpdateCoin>(new UpdateCoin());
+        }
+
+        public void UpdateHighestScore(int score)
+        {
+            _userData.HighestScore = score;
+            SavePlayerData();
+        }
+
         public void SavePlayerData()
         {
             SaveDataToJson(USER_DATA_PATH, _userData);

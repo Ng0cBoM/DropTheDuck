@@ -5,28 +5,28 @@ using Random = UnityEngine.Random;
 
 using DG.Tweening;
 using System;
+using EgdFoundation;
+using Core.Framework;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public Block currentBlock { get; set; }
+    [SerializeField] private GameObject warningLine;
+    [SerializeField] private List<Block> listPrefabs;
 
     private const int GridSizeX = 5;
     private const int GridSizeY = 7;
 
+    [HideInInspector] public Block currentBlock { get; set; }
+    [HideInInspector] public float gameSpeed;
+    [HideInInspector] public Vector2 spawnPosition = new Vector2(0, 6);
+    [HideInInspector] public bool canDrop = true;
+
     private Block[,] Grid = new Block[GridSizeX, GridSizeY];
-
-    public float gameSpeed;
-
-    [SerializeField]
-    private List<Block> listPrefabs;
-
     private List<Block> listBlockDestroy = new List<Block>();
-
-    public Vector2 spawnPosition = new Vector2(0, 6);
-
-    public bool canDrop = true;
+    private int score = 0;
+    private Block nextBlock;
 
     private void Awake()
     {
@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        warningLine.SetActive(false);
         SpawnRandomBlock();
     }
 
@@ -43,6 +44,7 @@ public class GameManager : MonoBehaviour
         canDrop = true;
         var block = listPrefabs[Random.Range(0, 5)];
         gameSpeed = 0.001f;
+        CheckGridToWarningOrGameOver();
         SpawnBlock(block, spawnPosition);
         StartCoroutine(MoveDown(currentBlock));
     }
@@ -50,6 +52,8 @@ public class GameManager : MonoBehaviour
     public void SpawnBlock(Block blockSpawn, Vector2 spawnPosition)
     {
         currentBlock = Instantiate(blockSpawn, spawnPosition, blockSpawn.transform.rotation);
+        currentBlock.transform.localScale = Vector3.zero;
+        currentBlock.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack);
     }
 
     public IEnumerator MoveDown(Block block)
@@ -59,6 +63,7 @@ public class GameManager : MonoBehaviour
             block.transform.position -= new Vector3(0, gameSpeed, 0);
             yield return new WaitForSeconds(0.001f);
         }
+        gameSpeed = 0.15f;
         FixBlockIntoGrid(block);
     }
 
@@ -124,6 +129,8 @@ public class GameManager : MonoBehaviour
         {
             int x = (Mathf.RoundToInt(block.transform.position.x)) + 2;
             int y = Mathf.RoundToInt(block.transform.position.y);
+            score += block.numberInBlock;
+            SignalBus.I.FireSignal<UpdateScore>(new UpdateScore(score));
             Grid[x, y] = null;
             Vector3 targetPosiotionMerge = new Vector3((int)rootBlock.transform.position.x, (int)rootBlock.transform.position.y, 0);
             if (block != rootBlock) block.transform.DOMove(targetPosiotionMerge, 0.2f).OnComplete(() =>
@@ -165,7 +172,7 @@ public class GameManager : MonoBehaviour
             {
                 if (Grid[i, j - 1] == null && Grid[i, j] != null)
                 {
-                    StartCoroutine(MoveDown(Grid[i, j]));
+                    StartCoroutine(MoveDownContinue(Grid[i, j]));
                     Grid[i, j] = null;
                     nullInGrid++;
                     breakLoopCondition++;
@@ -175,5 +182,43 @@ public class GameManager : MonoBehaviour
             if (breakLoopCondition != 0) break;
         }
         if (nullInGrid == 0) SpawnRandomBlock();
+    }
+
+    private IEnumerator MoveDownContinue(Block block)
+    {
+        yield return new WaitForSeconds(0.3f);
+        StartCoroutine(MoveDown(block));
+    }
+
+    private void GameOver()
+    {
+        // do game over
+        if (score > DataManager.I.UserData.HighestScore)
+        {
+            DataManager.I.UpdateHighestScore(score);
+        }
+        Time.timeScale = 0;
+    }
+
+    private void CheckGridToWarningOrGameOver()
+    {
+        bool checkWarning = false;
+        bool checkGameOver = false;
+        for (int i = 0; i < GridSizeX; i++)
+        {
+            if (CountBlockPerColume(i) == 5)
+            {
+                warningLine.SetActive(true);
+                checkWarning = true;
+                break;
+            }
+            if (CountBlockPerColume(i) == 6)
+            {
+                checkGameOver = true;
+                break;
+            }
+        }
+        if (!checkWarning) warningLine.SetActive(false);
+        if (checkGameOver) GameOver();
     }
 }

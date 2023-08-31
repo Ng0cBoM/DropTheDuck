@@ -14,8 +14,8 @@ public class PlayerInput : MonoBehaviour
             if (Input.GetMouseButtonUp(0))
             {
                 GameManager.Instance.canDrop = false;
-                GameManager.Instance.gameSpeed *= 100;
-                GameManager.Instance.spawnPosition = new Vector2(GetColumeMouse(), 7);
+                GameManager.Instance.gameSpeed = 0.2f;
+                GameManager.Instance.spawnPosition = new Vector2(GetColumeMouse(), 6);
             }
         }
     }
