@@ -10,11 +10,13 @@ public static class ScenesChanger
 {
     private static Scene oldScene;
     private static UnityEngine.AsyncOperation loadSceneAsync;
+
     public enum CONDITON_LOADING
     {
         load_ad_open_done,
         load_native_done
     }
+
     public static void ChangeScene(string sceneName)
     {
         AdManager.Instant.DestroyBanner();
@@ -23,7 +25,7 @@ public static class ScenesChanger
             () => AdManager.Instant.AdsOpenIsLoaded(0)
         );
         oldScene = SceneManager.GetActiveScene();
-        LoadingManager.Instant.Init(1, LoadingCompleteCallback).SetMaxTimeLoading(30);
+        LoadingManager.Instant.Init(1, LoadingCompleteCallback).SetMaxTimeLoading(2);
 
         loadSceneAsync = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         // SceneManager.UnloadSceneAsync(oldScene);
@@ -60,5 +62,4 @@ public static class ScenesChanger
             }
         );
     }
-
 }

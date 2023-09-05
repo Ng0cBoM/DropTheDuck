@@ -11,6 +11,7 @@ using Core.Framework;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    public bool gamePlaying = true;
 
     [SerializeField] private GameObject warningLine;
     [SerializeField] private List<Block> listPrefabs;
@@ -26,27 +27,23 @@ public class GameManager : MonoBehaviour
     private Block[,] Grid = new Block[GridSizeX, GridSizeY];
     private List<Block> listBlockDestroy = new List<Block>();
     private int score = 0;
-    private Block nextBlock;
 
     private void Awake()
     {
         Instance = this;
+        SignalBus.I.Register<ContinuePlay>(ContinueGame);
     }
 
     private void Start()
     {
-        warningLine.SetActive(false);
-        SpawnRandomBlock();
+        SpawnNewBlock();
     }
 
-    public void SpawnRandomBlock()
+    public void SpawnNewBlock()
     {
         canDrop = true;
-        var block = listPrefabs[Random.Range(0, 5)];
         gameSpeed = 0.001f;
         CheckGridToWarningOrGameOver();
-        SpawnBlock(block, spawnPosition);
-        StartCoroutine(MoveDown(currentBlock));
     }
 
     public void SpawnBlock(Block blockSpawn, Vector2 spawnPosition)
@@ -72,7 +69,7 @@ public class GameManager : MonoBehaviour
         return block.transform.position.y > CountBlockPerColume((int)block.transform.position.x + 2);
     }
 
-    private int CountBlockPerColume(int colume)
+    public int CountBlockPerColume(int colume)
     {
         int count = 0;
         for (int i = 0; i < GridSizeY; i++)
@@ -181,7 +178,7 @@ public class GameManager : MonoBehaviour
             }
             if (breakLoopCondition != 0) break;
         }
-        if (nullInGrid == 0) SpawnRandomBlock();
+        if (nullInGrid == 0) SpawnNewBlock();
     }
 
     private IEnumerator MoveDownContinue(Block block)
@@ -192,12 +189,15 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
-        // do game over
         if (score > DataManager.I.UserData.HighestScore)
         {
             DataManager.I.UpdateHighestScore(score);
         }
-        Time.timeScale = 0;
+        gamePlaying = false;
+        ScreenData screenData = new ScreenData();
+        screenData.screenData = new Dictionary<string, object>();
+        screenData.screenData["score"] = score;
+        UiManager.I.Push("GameOverPopup", screenData);
     }
 
     private void CheckGridToWarningOrGameOver()
@@ -210,7 +210,6 @@ public class GameManager : MonoBehaviour
             {
                 warningLine.SetActive(true);
                 checkWarning = true;
-                break;
             }
             if (CountBlockPerColume(i) == 6)
             {
@@ -220,5 +219,37 @@ public class GameManager : MonoBehaviour
         }
         if (!checkWarning) warningLine.SetActive(false);
         if (checkGameOver) GameOver();
+        else SignalBus.I.FireSignal<SpawnNewBlock>(new SpawnNewBlock());
+    }
+
+    private void ContinueGame(ContinuePlay signal)
+    {
+        StartCoroutine(DestroyBlock());
+    }
+
+    private IEnumerator DestroyBlock()
+    {
+        yield return new WaitForSeconds(0.3f);
+        for (int i = 0; i < GridSizeX; i++)
+        {
+            int column = i;
+            for (int j = 0; j < 3; j++)
+            {
+                Block blockNeedDestroy = Grid[column, CountBlockPerColume(column) - 1];
+                blockNeedDestroy.transform.DOScale(0f, 0.5f).SetEase(Ease.OutBack).OnComplete(() =>
+                {
+                    Destroy(blockNeedDestroy.gameObject);
+                });
+                Grid[column, CountBlockPerColume(column) - 1] = null;
+            }
+        }
+
+        gamePlaying = true;
+        SignalBus.I.FireSignal<SpawnNewBlock>(new SpawnNewBlock());
+    }
+
+    private void OnDestroy()
+    {
+        SignalBus.I.Unregister<ContinuePlay>(ContinueGame);
     }
 }

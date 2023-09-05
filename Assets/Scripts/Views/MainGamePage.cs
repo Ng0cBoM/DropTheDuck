@@ -40,4 +40,10 @@ public class MainGamePage : MonoBehaviour
     private void UpdateScore()
     {
     }
+
+    private void OnDestroy()
+    {
+        SignalBus.I.Unregister<UpdateCoin>(UpdateCoinHandle);
+        SignalBus.I.Unregister<UpdateScore>(UpdateScoreHandle);
+    }
 }

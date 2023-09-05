@@ -23,6 +23,7 @@ using UnityExtensions.Tween;
             UiManager.I.Pop();
         }
         public void Push(ScreenData screenData = null) {
+        Debug.Log($"TRY PUSH SCREEN {this.gameObject.name}");
             _screenData = screenData;
             canvasRoot = GetComponent<Canvas>();
             this.StartCoroutine(IE_PushingScreen());

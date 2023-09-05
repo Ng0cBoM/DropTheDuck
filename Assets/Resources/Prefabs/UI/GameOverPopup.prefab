@@ -68,7 +68,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 318314716694946670}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fdc95d9dfe9cf54398eecb6868b0335, type: 3}
   m_Name: 
@@ -76,11 +76,11 @@ MonoBehaviour:
   _updateMode: 0
   _foldoutControl: 1
   _foldoutEvents: 0
-  _duration: 1
+  _duration: 0.25
   timeMode: 1
   wrapMode: 0
   arrivedAction: 3
-  sampleOnAwake: 1
+  sampleOnAwake: 0
   _onForwardArrived:
     m_PersistentCalls:
       m_Calls: []
@@ -97,7 +97,7 @@ MonoBehaviour:
       data:
         enabled: 1
         _minNormalizedTime: 0
-        _maxNormalizedTime: 0.25
+        _maxNormalizedTime: 1
         _holdBeforeStart: 1
         _holdAfterEnd: 1
         _interpolator:
@@ -341,7 +341,6 @@ GameObject:
   - component: {fileID: 4526674814923179169}
   - component: {fileID: 8529412195717573328}
   - component: {fileID: 4419401755673304255}
-  - component: {fileID: 8676923160907889546}
   m_Layer: 5
   m_Name: GameOverPopup
   m_TagString: Untagged
@@ -451,18 +450,11 @@ MonoBehaviour:
   canvasRoot: {fileID: 0}
   tween: {fileID: 9160961760280254718}
   panel: {fileID: 0}
---- !u!114 &8676923160907889546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 912458934136618310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 153745e4593355e45984cac68a281f21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  scoreText: {fileID: 6240595359222433621}
+  highestScoreText: {fileID: 4422622344286400436}
+  continueButtonWithoutAds: {fileID: 8025874877876314582}
+  continueButtonWithAds: {fileID: 7949815091605742832}
+  backToHomeButton: {fileID: 405689054081526362}
 --- !u!1 &922536001578615662
 GameObject:
   m_ObjectHideFlags: 0
@@ -5795,7 +5787,7 @@ GameObject:
   - component: {fileID: 328412110853769870}
   - component: {fileID: 6240595359222433621}
   m_Layer: 5
-  m_Name: Text_Info
+  m_Name: ScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5932,7 +5924,7 @@ GameObject:
   - component: {fileID: 2698208365343257635}
   - component: {fileID: 7949815091605742832}
   m_Layer: 5
-  m_Name: Button_Continue
+  m_Name: ContinueWithAdsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11439,7 +11431,7 @@ GameObject:
   - component: {fileID: 1283098470083269120}
   - component: {fileID: 8025874877876314582}
   m_Layer: 5
-  m_Name: Button_Gem
+  m_Name: ContinueWithoutAdsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17131,7 +17123,7 @@ GameObject:
   - component: {fileID: 5766335940603894331}
   - component: {fileID: 4422622344286400436}
   m_Layer: 5
-  m_Name: Text_Info (1)
+  m_Name: HighScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17185,7 +17177,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Highest Score: 999'
+  m_text: 'High Score: 999'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c1482dbce654844b9ba1c753cbea5d80, type: 2}
   m_sharedMaterial: {fileID: 7374927986402738804, guid: c1482dbce654844b9ba1c753cbea5d80, type: 2}

@@ -16,3 +16,11 @@ public class UpdateScore : Signal
 public class UpdateCoin : Signal
 {
 }
+
+public class SpawnNewBlock : Signal
+{
+}
+
+public class ContinuePlay : Signal
+{
+}

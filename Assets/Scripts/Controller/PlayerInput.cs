@@ -7,11 +7,11 @@ public class PlayerInput : MonoBehaviour
     {
         if (GameManager.Instance.canDrop)
         {
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0) && GameManager.Instance.gamePlaying)
             {
                 SetPositionBlock();
             }
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButtonUp(0) && GameManager.Instance.gamePlaying)
             {
                 GameManager.Instance.canDrop = false;
                 GameManager.Instance.gameSpeed = 0.2f;
@@ -50,7 +50,8 @@ public class PlayerInput : MonoBehaviour
     {
         var current = GameManager.Instance.currentBlock.transform;
         var position = current.position;
-        position.x = GetColumeMouse();
+        if (position.y > GameManager.Instance.CountBlockPerColume(GetColumeMouse() + 2))
+            position.x = GetColumeMouse();
         current.position = position;
     }
 }
