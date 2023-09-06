@@ -232,18 +232,16 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         for (int i = 0; i < GridSizeX; i++)
         {
-            int column = i;
-            for (int j = 0; j < 3; j++)
+            while (CountBlockPerColume(i) >= 3)
             {
-                Block blockNeedDestroy = Grid[column, CountBlockPerColume(column) - 1];
-                blockNeedDestroy.transform.DOScale(0f, 0.5f).SetEase(Ease.OutBack).OnComplete(() =>
+                Block blockNeedDestroy = Grid[i, CountBlockPerColume(i) - 1];
+                blockNeedDestroy.transform.DOScale(0f, 0.5f).SetEase(Ease.Linear).OnComplete(() =>
                 {
                     Destroy(blockNeedDestroy.gameObject);
                 });
-                Grid[column, CountBlockPerColume(column) - 1] = null;
+                Grid[i, CountBlockPerColume(i) - 1] = null;
             }
         }
-
         gamePlaying = true;
         SignalBus.I.FireSignal<SpawnNewBlock>(new SpawnNewBlock());
     }

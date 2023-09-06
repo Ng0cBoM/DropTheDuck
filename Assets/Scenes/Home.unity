@@ -456,11 +456,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbbf7ee664111064d8d9afa5e9bc4b15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  KeepScreenWork: 0
-  KeepOldScreenWork: 0
-  prefabName: 
-  canvasRoot: {fileID: 0}
-  tween: {fileID: 0}
   playButton: {fileID: 786913767}
   shopButton: {fileID: 1963857434}
   inventoryButton: {fileID: 698178194}
